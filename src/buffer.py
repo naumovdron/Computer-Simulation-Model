@@ -11,7 +11,7 @@ class Buffer:
         for _ in range(len(self.__data)):
             if self.__data[index] is None:
                 self.__data[index] = request
-                self.__current_index = self.__get_next_index(self.__current_index)
+                self.__current_index = self.__get_next_index(index)
                 return None
             index = self.__get_next_index(index)
 
@@ -22,16 +22,17 @@ class Buffer:
         return to_deny
 
     # приоритет по номеру источника, по одной заявке
-    def pop(self):
+    def pop(self) -> Request:
         highest_priority = 0
-        while self.__data[highest_priority] is None:
-            highest_priority += 1
         for i in range(len(self.__data)):
-            if (self.__data[i] is not None
-                    and (self.__data[i].producer_id < self.__data[highest_priority].producer_id
-                         or (self.__data[i].producer_id == self.__data[highest_priority].producer_id
-                             and self.__data[i].id < self.__data[highest_priority].id))):
+            if self.__data[highest_priority] is None:
                 highest_priority = i
+            elif (self.__data[i] is not None
+                  and (self.__data[i].producer_id < self.__data[highest_priority].producer_id
+                       or (self.__data[i].producer_id == self.__data[highest_priority].producer_id
+                           and self.__data[i].id < self.__data[highest_priority].id))):
+                highest_priority = i
+
         to_pop = self.__data[highest_priority]
         self.__data[highest_priority] = None
         return to_pop
@@ -41,6 +42,12 @@ class Buffer:
             if i is not None:
                 return False
         return True
+
+    def size(self):
+        return len(self.__data)
+
+    def get_data(self):
+        return self.__data
 
     # буферизация по кольцу
     def __get_next_index(self, index):
