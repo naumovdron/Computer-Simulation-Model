@@ -112,13 +112,13 @@ class ComputerSimulationModelApp(QtWidgets.QMainWindow, design.UiDesign):
         self.__finish_simulation()
         while not self.__check_correctness():
             self.__calculate_n()
-            self.__restart_request_manager()
+            # self.__restart_request_manager()
             self.__finish_simulation()
 
         self.__update_diagram()
-        print(self.request_manager.get_utilization_rate(),
-              self.request_manager.get_deny_probability(),
-              self.request_manager.get_residence_time())
+        print("util.rate:", self.request_manager.get_utilization_rate(),
+              "deny prob.:", self.request_manager.get_deny_probability(),
+              "resid.time:", self.request_manager.get_residence_time())
         self.statusbar.showMessage('Finished', 1500)
 
     def __configure_diagram(self):
